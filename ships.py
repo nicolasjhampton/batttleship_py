@@ -64,7 +64,7 @@ class Submarine(Ship):
     size = 3
     name = "submarine"
 
-class Crusier(Ship):
+class Cruiser(Ship):
     size = 3
     name = "crusier"
 
