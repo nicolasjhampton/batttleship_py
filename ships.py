@@ -1,73 +1,105 @@
-from functools import reduce
+from functools import reduce, partial
 
 class Ship:
     
-    size = 1
-    hits = []
-
-    def __init__(self, *args):
-        self.is_valid_ship(args)  
-        self.position = args
-        self.left = list(self.position)
+    types = {
+        "Carrier": 5,
+        "Battleship": 4,
+        "Submarine": 3,
+        "Cruiser": 3,
+        "Patrol": 2
+    }
     
     def __str__(self):
-        return "{} from {} to {} taken {} damage".format(
-            self.name.title(),
-            self.position[0],
-            self.position[-1],
-            len(self.hits))
+        try:
+            position, hits = self.get_state()
+        except (AttributeError, TypeError) as e:
+            return "{} has not been placed.".format(self.get_name())
+        else:
+            line = sorted(list(position))
+            return "{} from {} to {} taken {} damage".format(
+                       self.get_name(),
+                       line[0],
+                       line[-1],
+                       len(hits))    
+ 
+    def set_state(self, *args):
+        """sets the coordinates of the ship on the board"""
+        position = self.is_valid(args)
+        self.position = partial(lambda x: x, args)
+        self.hits = partial(lambda x: x, [])
 
-    def is_valid_ship(self, points):
+    def is_valid(self, points):
         """Tests ship for correct coordinates. Ship has to be straight,
         solid, continuous, and have the correct length (unique)"""
+        size = self.get_size()
         xAxis = {x for x, y in points}
         yAxis = {y for x, y in points}
         run = xAxis if xAxis > yAxis else yAxis
         width = yAxis if xAxis > yAxis else xAxis
         straight = len(width) == 1
-        unique = len(run) == self.size
+        unique = len(run) == size
         diff = reduce(lambda x, y: x + y, range(len(run)))
         continuous = (max(run) * len(run) - sum(run)) == diff
         if not straight or not unique or not continuous:
-            raise ValueError("{} has inconsistent coords".format(self.name))
-        if not len(points) == self.size:
+            raise ValueError("{} has inconsistent coords".format(self.get_name()))
+        if not len(points) == size:
             raise ValueError("Wrong size ({}) entered for {}.".format(
                                 len(points), 
-                                self.__class__.__name__))
+                                self.get_name()))
+        return sorted(points)
+    
+    def get_state(self):
+        """Gives information needed to draw ship"""
+        try:
+            return sorted(list(self.position())), sorted(list(self.hits()))
+        except AttributeError:
+            return -1
+ 
+    def get_name(self):
+        return self.__class__.__name__
+
+    def get_size(self):           
+        """Returns the correct ship size for each type of ship"""
+        return self.types[self.get_name()]
         
     def is_hit(self, point):
         """Returns falsy if miss, truthy if hit, and updates the ship"""
+        position, hits = self.get_state()
+        if position == hits:
+            return -1
+        if point in hits:
+            return 0          
         try:
-            hit = self.left.index(point)
+            position.index(point)
         except ValueError:
-            return 0;
+            return 0
         else:
-            self.hits.append(self.left.pop(hit))
-            if not self.left:
+            new_hits = [point] + hits 
+            self.hits = partial(lambda args: args, new_hits) 
+            if len(new_hits) == len(position):
                 return -1
             else:
                 return 1
-    
-    def report(self):
-        """Gives information needed to draw ship"""
-        return (sorted(self.position), self.hits[:])
+
 
 class Carrier(Ship):
-    size = 5
-    name = "aircraft carrier"
+    pass
+
 
 class Battleship(Ship):
-    size = 4
-    name = "battleship"
+    pass
+
 
 class Submarine(Ship):
-    size = 3
-    name = "submarine"
+    pass
+
 
 class Cruiser(Ship):
-    size = 3
-    name = "crusier"
+    pass
+
 
 class Patrol(Ship):
-    size = 2
-    name = "patrol ship"
+    pass
+
+
