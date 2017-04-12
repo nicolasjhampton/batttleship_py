@@ -1,24 +1,22 @@
-from ships import Carrier, Battleship, Submarine, Cruiser, Patrol
 from player import Player
 
 class Game:
-    grid = {(x,y) for x in range(10) for y in range(10)}
+
+    turn = False
 
     def __init__(self, **kwargs):
-        self.first = kwargs.get("first", "Player One")
-        self.second = kwargs.get("second", "Player Two")
-        self.board_size = kwargs.get("size", 10)  
+        self.first = kwargs.get("first", Player("First"))
+        self.second = kwargs.get("second", Player("Second"))
 
     def translate_coord(self, string):
+        """Turns the letter/number string input from the user into 
+        coordinates for the grid model"""
         letter = string[0]
         number = string[1:]
         x = ord(letter) - ord('a')
         y = abs(int(number) - self.board_size)
         return x, y
-
-    def get_ship_length(self, name):
-        pass
-    
+ 
     def line(self, point, vector, length):
         horizontal, vertical = vector
         step = 1 if max(vector) == 1 else -1
@@ -28,13 +26,39 @@ class Game:
         a, b = run, [anchor] if horizontal else [anchor], run
         return {(x, y) for x in a for y in b}
 
-    def get_ship(self, coord_set):
-        len(coord_set)
-        pass
+    def get_player(self):
+        return self.first if self.turn else self.second
+
+    def get_next_player(self):
+        self.turn = not self.turn
+        return get_player()
+
+    def get_ship(self, player):
+        try:
+            ship = player.next_ship()
+        except ValueError:
+            raise ValueError("{} is out of ships".format(player.name))
+        else:
+            return ship
         
-    def place_ship(self, coord, vector, length, name):
+    def place_ship(self, player, coord, vector):
+        player = self.first if self.turn else self.second
         point = self.translate_coord(coord)
-        shipline = line(point, vector, length)
-        if not shipline - grid:
-           grid = grid - shipline 
-           ship = get_ship(name, shipline) 
+        try:
+            ship = player.pop_ship()      
+        except IndexError:
+            return -1
+        else:
+            shipline = line(point, vector, ship.get_size())
+            if not shipline - player.get_grid():
+                ship.set_state(shipline)
+                player.set_ship(ship)
+                return 1
+            else:
+                player.put_ship_back(ship)
+                return -1
+                
+
+
+
+ 
