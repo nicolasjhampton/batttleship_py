@@ -23,7 +23,7 @@ class Ship:
                        line[-1],
                        len(hits))    
  
-    def set_state(self, *args):
+    def set_state(self, args):
         """sets the coordinates of the ship on the board"""
         position = self.is_valid(args)
         self.position = partial(lambda x: x, args)
@@ -35,8 +35,12 @@ class Ship:
         size = self.get_size()
         xAxis = {x for x, y in points}
         yAxis = {y for x, y in points}
-        run = xAxis if xAxis > yAxis else yAxis
-        width = yAxis if xAxis > yAxis else xAxis
+        print(xAxis)
+        print(yAxis)
+        width = xAxis if len(xAxis) < len(yAxis) else yAxis
+        run = yAxis if len(xAxis) < len(yAxis) else xAxis
+        print(run)
+        print(width)
         straight = len(width) == 1
         unique = len(run) == size
         diff = reduce(lambda x, y: x + y, range(len(run)))
