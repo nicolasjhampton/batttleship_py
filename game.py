@@ -50,6 +50,10 @@ class Game:
     def get_fleet(self):
         grid = self.get_player().get_grid()
         return grid["fleet"]
+    
+    def get_spaces(self):
+        grid = self.get_player().get_grid()
+        return grid["spaces"] 
 
     def place_ship(self, player, coord, vector):
         player = self.get_player()

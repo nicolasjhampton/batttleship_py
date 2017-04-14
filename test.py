@@ -1,4 +1,5 @@
-from battleship import print_board, map_ships, map_spaces
+#from battleship import print_board, map_ships, map_spaces
+from display import Display
 from game import Game
 
 game = Game()
@@ -30,4 +31,7 @@ print(result)
 print(game.get_player().get_grid())
 print(game.check_spaces((0,9)))
 print(game.check_spaces((9,9)))
-print_board(map_ships(map_spaces(game)))            
+fleet = game.get_fleet()
+spaces = game.get_spaces()
+display = Display()
+display.print_board(display.map_fleet(display.map_spaces(spaces),fleet))            
