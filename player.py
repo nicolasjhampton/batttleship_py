@@ -34,7 +34,8 @@ class Player:
             size = ship.get_size()
             name = ship.get_name()
             return size, name
-        self.ships.sort(key=ship_key, reverse=True)
+        if self.ships:
+            self.ships.sort(key=ship_key, reverse=True)
         return self.ships
 
     def next_ship(self):
@@ -45,7 +46,7 @@ class Player:
         return self.get_ships().pop(0)
 
     def get_grid(self):
-        return self.grid["spaces"]
+        return self.grid
 
     def put_ship_back(self, ship):
         self.ships.insert(0, ship)

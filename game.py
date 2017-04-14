@@ -18,7 +18,7 @@ class Game:
         letter = coord[0]
         number = coord[1:]
         x = ord(letter) - ord('a')
-        y = abs(int(number) - 10)
+        y = int(number) - 1
         return x, y
 
     def line(self, point, vector, length):
@@ -39,13 +39,17 @@ class Game:
         self.turn = not self.turn
         return self.get_player()
 
-    def get_ship(self, player):
+    def get_ship(self):
         try:
             ship = self.get_player().next_ship()
         except ValueError:
             return 0
         else:
             return ship
+
+    def get_fleet(self):
+        grid = self.get_player().get_grid()
+        return grid["fleet"]
 
     def place_ship(self, player, coord, vector):
         player = self.get_player()
@@ -56,7 +60,8 @@ class Game:
             return 0
         else:
             shipline = self.line(point, vector, ship.get_size())
-            if not shipline - player.get_grid():
+            grid = player.get_grid()
+            if not shipline - grid["spaces"]:
                 ship.set_state(shipline)
                 player.set_ship(ship)
                 return 1
@@ -64,6 +69,12 @@ class Game:
                 player.put_ship_back(ship)
                 return -1
 
+    def check_spaces(self, point):
+        grid = self.get_player().get_grid()
+        return point in grid["spaces"]
 
+    #def check_ships(self, point):
+        
+        
 
 
