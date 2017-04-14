@@ -1,7 +1,7 @@
 from functools import reduce, partial
 
 class Ship:
-    
+
     types = {
         "Carrier": 5,
         "Battleship": 4,
@@ -9,7 +9,7 @@ class Ship:
         "Cruiser": 3,
         "Patrol": 2
     }
-    
+
     def __str__(self):
         try:
             position, hits = self.get_state()
@@ -21,8 +21,8 @@ class Ship:
                        self.get_name(),
                        line[0],
                        line[-1],
-                       len(hits))    
- 
+                       len(hits))
+
     def set_state(self, args):
         """sets the coordinates of the ship on the board"""
         position = self.is_valid(args)
@@ -35,12 +35,8 @@ class Ship:
         size = self.get_size()
         xAxis = {x for x, y in points}
         yAxis = {y for x, y in points}
-        print(xAxis)
-        print(yAxis)
         width = xAxis if len(xAxis) < len(yAxis) else yAxis
         run = yAxis if len(xAxis) < len(yAxis) else xAxis
-        print(run)
-        print(width)
         straight = len(width) == 1
         unique = len(run) == size
         diff = reduce(lambda x, y: x + y, range(len(run)))
@@ -52,21 +48,21 @@ class Ship:
                                 len(points), 
                                 self.get_name()))
         return sorted(points)
-    
+
     def get_state(self):
         """Gives information needed to draw ship"""
         try:
             return sorted(list(self.position())), sorted(list(self.hits()))
         except AttributeError:
             return -1
- 
+
     def get_name(self):
         return self.__class__.__name__
 
     def get_size(self):           
         """Returns the correct ship size for each type of ship"""
         return self.types[self.get_name()]
-        
+
     def is_hit(self, point):
         """Returns falsy if miss, truthy if hit, and updates the ship"""
         position, hits = self.get_state()

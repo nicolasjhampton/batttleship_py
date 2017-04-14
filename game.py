@@ -55,7 +55,7 @@ class Game:
         grid = self.get_player().get_grid()
         return grid["spaces"] 
 
-    def place_ship(self, player, coord, vector):
+    def place_ship(self, coord, vector):
         player = self.get_player()
         point = self.translate_coord(coord)
         try:

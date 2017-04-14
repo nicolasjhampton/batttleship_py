@@ -3,35 +3,20 @@ from display import Display
 from game import Game
 
 game = Game()
-player = game.get_player()
-ship = game.get_ship()
-print(game)
-print(player)
-print(ship)
-result = game.place_ship(player, 'a1', (1, 0))
-print(result)
-print(game.get_ship())
-print(game.get_ship())
-result = game.place_ship(player, 'a1', (0, -1))
-print(result)
-result = game.place_ship(player, 'a2', (0, -1))
-print(result)
-print(game.get_player().get_grid())
-print(player)
-print(player.grid["spaces"])
-print(player.ships)
-result = game.place_ship(player, 'b2', (1, 0))
-print(result)
-result = game.place_ship(player, 'b3', (1, 0))
-print(result)
-result = game.place_ship(player, 'a6', (0, -1))
-print(result)
-result = game.place_ship(player, 'c2', (1, 0))
-print(result)
-print(game.get_player().get_grid())
-print(game.check_spaces((0,9)))
-print(game.check_spaces((9,9)))
+
+display = Display()
+
+print(game.place_ship('a1', (1, 0)))
+
+print(game.place_ship('b3', (1, 0)))
+
+print(game.place_ship('c5', (1, 0)))
+
+print(game.place_ship('a6', (0, 1)))
+
+print(game.place_ship('d7', (1, 0)))
+
 fleet = game.get_fleet()
 spaces = game.get_spaces()
-display = Display()
+
 display.print_board(display.map_fleet(display.map_spaces(spaces),fleet))            
