@@ -11,6 +11,8 @@ class Display:
     BOARD_SIZE = 10
 
     SHIP = u"\u2588"
+    VERT_SHIP = '|'
+    HORI_SHIP = '-'
     EMPTY = 'O'
     MISS = '.'
     HIT = '*'
@@ -52,17 +54,16 @@ class Display:
             board[y][x] = sprite
         return board
 
-    def get_ship_sprites(self, position, hits):
+    def get_ship_sprites(self, position, hits, axis):
         if len(position) == len(hits):
             return self.SUNK, self.SUNK
         else:
-            return self.SHIP, self.HIT
-
-    # def get_ship_sprites(self, position, hits):
-    #     if len(position) == len(hits):
-    #         return self.SUNK, self.SUNK
-    #     else:
-    #         return self.SHIP, self.HIT
+            if axis == 1:
+                return self.VERT_SHIP, self.HIT
+            elif axis == -1:
+                return self.HORI_SHIP, self.HIT
+            else:
+                return self.SHIP, self.HIT
 
     def map_guesses(self, board, guesses):
         guess_hits = guesses.get("hits")
@@ -74,8 +75,8 @@ class Display:
 
     def map_fleet(self, board, fleet):
         for ship in fleet:
-            position, hits = ship.get_state()
-            positive, negative = self.get_ship_sprites(position, hits)
+            position, hits, axis = ship.get_state() # add axis here
+            positive, negative = self.get_ship_sprites(position, hits, axis) # axis goes here
             ship_placed = self.map_sprite(board, position, positive)
             board = self.map_sprite(ship_placed, hits, negative)
         return board

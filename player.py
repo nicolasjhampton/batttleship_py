@@ -57,7 +57,7 @@ class Player:
         self.ships.insert(0, ship)
 
     def set_ship(self, ship):
-        position, toss = ship.get_state()
+        position, toss, axis = ship.get_state()
         self.grid["spaces"] -= set(position)
         self.grid["fleet"].append(ship)
 

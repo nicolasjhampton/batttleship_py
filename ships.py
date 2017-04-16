@@ -12,7 +12,7 @@ class Ship:
 
     def __str__(self):
         try:
-            position, hits = self.get_state()
+            position, hits, axis = self.get_state()
         except (AttributeError, TypeError) as e:
             return "{} has not been placed.".format(self.get_name())
         else:
@@ -38,6 +38,7 @@ class Ship:
         yAxis = {y for x, y in points}
         width = xAxis if len(xAxis) < len(yAxis) else yAxis
         run = yAxis if len(xAxis) < len(yAxis) else xAxis
+        axis = 1 if len(xAxis) < len(yAxis) else -1
         straight = len(width) == 1
         unique = len(run) == size
         diff = reduce(lambda x, y: x + y, range(len(run)))
@@ -48,24 +49,25 @@ class Ship:
             raise ValueError("Wrong size ({}) entered for {}.".format(
                                 len(points),
                                 self.get_name()))
-        return sorted(points)
+        return sorted(points), axis
 
     def set_state(self, args):
         """sets the coordinates of the ship on the board"""
-        position = self.is_valid(args)
+        position, axis = self.is_valid(args)
         self.position = partial(lambda x: x, args)
+        self.axis = partial(lambda x: x, axis)
         self.hits = partial(lambda x: x, [])
 
     def get_state(self):
         """Gives information needed to draw ship"""
         try:
-            return sorted(list(self.position())), sorted(list(self.hits()))
+            return sorted(list(self.position())), sorted(list(self.hits())) , self.axis()# add axis here
         except AttributeError:
             return -1
 
     def is_hit(self, point):
         """Returns falsy if miss, truthy if hit, and updates the ship"""
-        position, hits = self.get_state()
+        position, hits, axis = self.get_state()
         previously_sunk = len(position) == len(hits)
         previously_hit_point = point in hits
         if previously_hit_point or previously_sunk:
