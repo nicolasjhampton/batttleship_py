@@ -1,22 +1,26 @@
-#from battleship import print_board, map_ships, map_spaces
-from display import Display
-from game import Game
+from battleship import Battleship
 
-game = Game()
+if __name__ == "__main__":
+    game = Battleship()
 
-display = Display()
+    # Show game splash screen
 
-print(game.place_ship('a1', (1, 0)))
+    # Input for first and second player
+    for x in range(2):
+        game.init_player(x + 1)
 
-print(game.place_ship('b3', (1, 0)))
+    turns = range(game.get_player_count())
 
-print(game.place_ship('c5', (1, 0)))
+    for x in turns:
+        game.change_and_announce_player()
+        game.choose_ships()
 
-print(game.place_ship('a6', (0, 1)))
+    # Announce start of game
+    while True:
+        game.change_and_announce_player()
+        win = game.make_move()
+        if win is True:
+            break
 
-print(game.place_ship('d7', (1, 0)))
-
-fleet = game.get_fleet()
-spaces = game.get_spaces()
-
-display.print_board(display.map_fleet(display.map_spaces(spaces),fleet))            
+    # Show win screen
+    game.win()

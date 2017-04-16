@@ -2,7 +2,7 @@ from functools import reduce, partial
 
 class Ship:
 
-    types = {
+    TYPES = {
         "Carrier": 5,
         "Battleship": 4,
         "Submarine": 3,
@@ -23,11 +23,12 @@ class Ship:
                        line[-1],
                        len(hits))
 
-    def set_state(self, args):
-        """sets the coordinates of the ship on the board"""
-        position = self.is_valid(args)
-        self.position = partial(lambda x: x, args)
-        self.hits = partial(lambda x: x, [])
+    def get_name(self):
+        return self.__class__.__name__
+
+    def get_size(self):
+        """Returns the correct ship size for each type of ship"""
+        return self.TYPES[self.get_name()]
 
     def is_valid(self, points):
         """Tests ship for correct coordinates. Ship has to be straight,
@@ -45,9 +46,15 @@ class Ship:
             raise ValueError("{} has inconsistent coords".format(self.get_name()))
         if not len(points) == size:
             raise ValueError("Wrong size ({}) entered for {}.".format(
-                                len(points), 
+                                len(points),
                                 self.get_name()))
         return sorted(points)
+
+    def set_state(self, args):
+        """sets the coordinates of the ship on the board"""
+        position = self.is_valid(args)
+        self.position = partial(lambda x: x, args)
+        self.hits = partial(lambda x: x, [])
 
     def get_state(self):
         """Gives information needed to draw ship"""
@@ -56,31 +63,22 @@ class Ship:
         except AttributeError:
             return -1
 
-    def get_name(self):
-        return self.__class__.__name__
-
-    def get_size(self):           
-        """Returns the correct ship size for each type of ship"""
-        return self.types[self.get_name()]
-
     def is_hit(self, point):
         """Returns falsy if miss, truthy if hit, and updates the ship"""
         position, hits = self.get_state()
-        if position == hits:
-            return -1
-        if point in hits:
-            return 0          
+        previously_sunk = len(position) == len(hits)
+        previously_hit_point = point in hits
+        if previously_hit_point or previously_sunk:
+            return 0
         try:
             position.index(point)
         except ValueError:
             return 0
         else:
-            new_hits = [point] + hits 
-            self.hits = partial(lambda args: args, new_hits) 
-            if len(new_hits) == len(position):
-                return -1
-            else:
-                return 1
+            new_hits = [point] + hits
+            self.hits = partial(lambda args: args, new_hits)
+            sunk = len(new_hits) == len(position)
+            return -1 if sunk else 1
 
 
 class Carrier(Ship):
@@ -101,5 +99,3 @@ class Cruiser(Ship):
 
 class Patrol(Ship):
     pass
-
-
