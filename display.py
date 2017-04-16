@@ -143,3 +143,7 @@ class Display:
         print("Batten the hatches! Fire!")
         coord = self.enter_coordinate()
         return coord
+
+    def splash_win(self, player):
+        self.clear_screen()
+        input("Congratulations {}! You've won!".format(player.get_name()))

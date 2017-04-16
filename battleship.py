@@ -1,4 +1,4 @@
-import os
+import sys
 
 from display import Display
 from model import Model
@@ -55,5 +55,5 @@ class Battleship:
                 return result
 
     def win(self):
-        self.display.splash_win(self.game.get_player())
+        self.display.splash_win(self.model.get_player())
         sys.exit()
