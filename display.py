@@ -22,10 +22,12 @@ class Display:
         pass
 
     def clear_screen(self):
-        print("\033c",end="")
+        print("\033c", end="")
 
     def print_board_heading(self):
-        print("|   " + " ".join([chr(c) for c in range(ord('A'), ord('A') + self.BOARD_SIZE)]) + "|")
+        print("|   " + " ".join(
+                [chr(c) for c in range(ord('A'), ord('A') + self.BOARD_SIZE)]
+                ) + "|")
 
     def print_board(self, board):
         self.print_board_heading()
@@ -72,11 +74,10 @@ class Display:
         full_guesses = self.map_sprite(missed_guesses, guess_hits, self.HIT)
         return full_guesses
 
-
     def map_fleet(self, board, fleet):
         for ship in fleet:
-            position, hits, axis = ship.get_state() # add axis here
-            positive, negative = self.get_ship_sprites(position, hits, axis) # axis goes here
+            position, hits, axis = ship.get_state()
+            positive, negative = self.get_ship_sprites(position, hits, axis)
             ship_placed = self.map_sprite(board, position, positive)
             board = self.map_sprite(ship_placed, hits, negative)
         return board
@@ -97,7 +98,6 @@ class Display:
         print("-"*24)
         self.print_board(filled_grid)
         print("-"*24)
-
 
     def validate_direction(self, direction):
         direction = direction[0].lower()

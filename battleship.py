@@ -3,6 +3,7 @@ import sys
 from display import Display
 from model import Model
 
+
 class Battleship:
     def __init__(self):
         self.model = Model()

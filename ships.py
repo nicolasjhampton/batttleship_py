@@ -1,5 +1,6 @@
 from functools import reduce, partial
 
+
 class Ship:
 
     TYPES = {
@@ -44,7 +45,8 @@ class Ship:
         diff = reduce(lambda x, y: x + y, range(len(run)))
         continuous = (max(run) * len(run) - sum(run)) == diff
         if not straight or not unique or not continuous:
-            raise ValueError("{} has inconsistent coords".format(self.get_name()))
+            raise ValueError("{} has inconsistent coords".format(
+                                self.get_name()))
         if not len(points) == size:
             raise ValueError("Wrong size ({}) entered for {}.".format(
                                 len(points),
@@ -61,7 +63,7 @@ class Ship:
     def get_state(self):
         """Gives information needed to draw ship"""
         try:
-            return sorted(list(self.position())), sorted(list(self.hits())) , self.axis()# add axis here
+            return list(self.position()), list(self.hits()), self.axis()
         except AttributeError:
             return -1
 

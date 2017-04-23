@@ -1,5 +1,6 @@
 from player import Player
 
+
 class Model:
     def __init__(self, **kwargs):
         self.players = []
